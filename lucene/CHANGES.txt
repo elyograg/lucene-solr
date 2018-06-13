@@ -73,6 +73,9 @@ Changes in Runtime Behavior
 * LUCENE-8031: Length normalization correctly reflects omission of term frequencies.
   (Robert Muir, Adrien Grand)
 
+* LUCENE-7444: StandardAnalyzer no longer defaults to removing English stopwords
+  (Alan Woodward)
+
 Improvements
 
 * LUCENE-7997: Add BaseSimilarityTestCase to sanity check similarities.
@@ -109,7 +112,11 @@ Optimizations
 
 ======================= Lucene 7.5.0 =======================
 
-(No changes)
+Bug Fixes:
+
+ * LUCENE-8164: IndexWriter silently accepts broken payload. This has been fixed
+   via LUCENE-8165 since we are now checking for offset+length going out of bounds.
+   (Robert Muir, Nhat Nyugen, Simon Willnauer)
 
 ======================= Lucene 7.4.0 =======================
 
@@ -269,6 +276,9 @@ Bug Fixes
 
 * LUCENE-8278: Some end-of-input no-scheme domain-only URL tokens are typed as
   <ALPHANUM> rather than <URL>.  (Junte Zhang, Steve Rowe)
+
+* LUCENE-8355: Prevent IW from opening an already dropped segment while DV updates
+  are written. (Nhat Nguyen via Simon Willnauer)
 
 Other
 
