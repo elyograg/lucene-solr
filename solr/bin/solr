@@ -73,24 +73,8 @@ else
   exit 1
 fi
 
-# Exit if bash not found or too old.
-exit_if_no_bash
-exit_if_bash_too_old
-
-# Running this script from cygwin is not supported.
-# If somebody creates a bulletproof implementation,
-# This might be reconsidered.
-THIS_OS="`uname -s`"
-if [ -z "${SOLR_FORCE_FLAG}" ] && [[ "${THIS_OS,,}" = *cygwin* ]]; then
-  echo >&2 "This script does not support cygwin."
-  echo >&2 "Use the native solr.cmd script on Windows."
-  echo >&2 "You can continue by setting SOLR_FORCE_FLAG,"
-  echo >&2 "but you'll be in unsupported territory."
-  err_msg_contact_community
-  exit 1
-fi
-
-# If there are other platforms that are not supported, detect above this line.
+# Exit if shell no good.
+exit_if_bad_shell
 
 # Call function to set location variables, including SOLR_TIP.  The
 # function will also change the current directory to SOLR_TIP.

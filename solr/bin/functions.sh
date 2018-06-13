@@ -410,20 +410,14 @@ check_oom_exit_supported() {
   return ${RET}
 }
 
-# If the BASH_VERSION variable is not set, it is a reasonable indication
-# that the shell we are running in is not bash.  If that situation is
-# detected, exit.
-exit_if_no_bash() {
+# Exit script if the environment is unsuitable - no bash, bash too old, etc.
+exit_if_bad_shell() {
   if [ -z "${BASH_VERSION}" ]; then
     echo >&2 "This script must be run by the bash shell."
     err_msg_contact_community
     exit 1
   fi
-}
 
-# Exit script if the bash version is too old.  Require version 4.
-# The first release of bash 4 was in 2009.
-exit_if_bash_too_old() {
   if [ -n "${BASH_VERSINFO[*]}" ]; then
     if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
       echo >&2 "Detected bash version is ${BASH_VERSION}."
@@ -434,6 +428,19 @@ exit_if_bash_too_old() {
   else
     echo >&2 "There was a problem detecting bash version."
     echo >&2 "Aborting because compatibility cannot be detected."
+    err_msg_contact_community
+    exit 1
+  fi
+
+  # Running this script from cygwin is not supported.
+  # If somebody creates a bulletproof implementation,
+  # This might be reconsidered.
+  THIS_OS="`uname -s`"
+  if [ -z "${SOLR_FORCE_FLAG}" ] && [[ "${THIS_OS,,}" = *cygwin* ]]; then
+    echo >&2 "This script does not support cygwin."
+    echo >&2 "Use the native solr.cmd script on Windows."
+    echo >&2 "You can continue by setting SOLR_FORCE_FLAG,"
+    echo >&2 "but you'll be in unsupported territory."
     err_msg_contact_community
     exit 1
   fi
