@@ -26,10 +26,14 @@ import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/*
+ * Dependency goals: All classes needed for basic operation such as starting
+ * services should ideally have zero dependencies. SolrCLI and friends will
+ * need SolrJ.  Hopefully that will be all the dependencies needed.
+ */
+
 /**
- * Executable class for the Solr Agent. Accepts commands on the CLI. TODO: Work out the lifecycle and which commands
- * will send requests over a socket to an already running agent. If the Solr process that this agent is monitoring dies,
- * this agent will shut down automatically shortly afterwards.
+ * Executable class for the Solr Agent. Accepts commands on the CLI. TODO: Work out the full lifecycle.
  */
 public class Main {
   private static final String JVM_IS_SHORT_TERM = "JVM_IS_SHORT_TERM";
