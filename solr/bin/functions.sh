@@ -412,26 +412,6 @@ check_oom_exit_supported() {
 
 # Exit script if the environment is unsuitable - no bash, bash too old, etc.
 exit_if_bad_shell() {
-  if [ -z "${BASH_VERSION}" ]; then
-    echo >&2 "This script must be run by the bash shell."
-    err_msg_contact_community
-    exit 1
-  fi
-
-  if [ -n "${BASH_VERSINFO[*]}" ]; then
-    if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
-      echo >&2 "Detected bash version is ${BASH_VERSION}."
-      echo >&2 "Script needs at least version 4."
-      err_msg_contact_community
-      exit 1
-    fi
-  else
-    echo >&2 "There was a problem detecting bash version."
-    echo >&2 "Aborting because compatibility cannot be detected."
-    err_msg_contact_community
-    exit 1
-  fi
-
   # Running this script from cygwin is not supported.
   # If somebody creates a bulletproof implementation,
   # This might be reconsidered.
@@ -441,6 +421,30 @@ exit_if_bad_shell() {
     echo >&2 "Use the native solr.cmd script on Windows."
     echo >&2 "You can continue by setting SOLR_FORCE_FLAG,"
     echo >&2 "but you'll be in unsupported territory."
+    err_msg_contact_community
+    exit 1
+  fi
+
+  if [ -z "${BASH_VERSION}" ]; then
+    echo >&2 "This script must be run by the bash shell."
+    err_msg_contact_community
+    exit 1
+  fi
+
+  BASH_VERSION_BAD=0
+  if [[ "$(declare -p BASH_VERSINFO)" =~ "declare -a" ]];
+    if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
+      BASH_VERSION_BAD=1
+      echo >&2 "Detected bash version is ${BASH_VERSION}."
+      echo >&2 "Aborting because script needs at least version 4."
+    fi
+  else
+    BASH_VERSION_BAD=1
+    echo >&2 "There was a problem detecting bash version."
+    echo >&2 "Aborting because compatibility cannot be detected."
+  fi
+
+  if [ ${BASH_VERSION_BAD} -ne 0 ]; then
     err_msg_contact_community
     exit 1
   fi
