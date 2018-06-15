@@ -33,7 +33,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 /**
- * Executable class for the Solr Agent. Accepts commands on the CLI. TODO: Work out the full lifecycle.
+ * Executable class for the Solr Agent. Accepts commands on the CLI. The intent here is minimal dependencies for this
+ * class and any other classes required for service startup. Ideally service startup will only require Java, but other
+ * small dependencies might be OK. Some of the other classes in this package, particularly SolrCLI, will have more
+ * significant dependencies. TODO: Work out the lifecycle and which commands will send requests over a socket to an
+ * already running agent.
  */
 public class Main {
   private static final String JVM_IS_SHORT_TERM = "JVM_IS_SHORT_TERM";
